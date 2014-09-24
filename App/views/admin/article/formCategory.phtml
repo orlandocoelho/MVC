@@ -1,0 +1,65 @@
+<div class="fluid">
+    <?php
+    require_once 'header.phtml';
+
+    use OC\Error\Messages;
+
+    $msg = new Messages();
+    $msg->display();
+    $url = OC\Di\Container::getClass('url');
+    $article = new App\Models\Article('adm_categoryArticle');
+    ?>
+    <div class="tab-pane">
+        <div class="row">
+            <?php
+            if ($url->getUrl() === "/admin/conteudo/category/update/" . $url->getId()) {
+                $value = 'up';
+            } else {
+                $value = 'add';
+            }
+
+            $where = ['id' => $url->getId()];
+
+            $up = $article->find($where);
+            $menus = new App\Models\Article('adm_menu');
+            $read = $menus->read();
+            ?>            
+            <div class="col-lg-4 col-lg-offset-1">
+                <h3>Categoria <?php if($url->getUrl() === "/admin/conteudo/category/update/" . $url->getId()): ?> <strong><?=$up['adm_name']?></strong> <?php endif; ?></strong></h3>
+                <form action="/admin/conteudo/category/<?=$value?>" method="post" class="form" id="form">
+                    <div class="form-group">
+                        <label for="nameCat">Nome Categoria</label>
+                        <input type="text" id="nameCat" name="nameCat" class="form-control required" value="<?=$up['adm_name']?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="descCat">Descrição</label>
+                        <input type="text" id="descCat" name="descCat" class="form-control required" value="<?=$up['adm_description']?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="menuCat">Menu</label>
+                        <select class="form-control required" name="menuCat">
+                            <option value="nenhum">Nenhum</option>
+                            <?php foreach ($read as $m): ?>
+                            <option value="<?=$m['adm_item']?>" <?php if($up['adm_menu'] == $m['adm_item']) echo 'selected="selected"' ?>><?=$m['adm_item']?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="publicCat">Publicar categoria</label>
+                        <select class="form-control required" name="publicCat">
+                            <option value="0" <?php if($up['adm_public'] == 0) echo 'selected="selected"'?>>Não</option>
+                            <option value="1" <?php if($up['adm_public'] == 1) echo 'selected="selected"'?>>Sim</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="action" value="<?=$value?>" />
+                        <?php if($url->getUrl() === "/admin/conteudo/category/update/" . $url->getId()): ?><input type="hidden" name="id" value="<?=$up['id']?>" /><?php endif;?>
+                        <button type="submit" class="btn btn-danger">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>

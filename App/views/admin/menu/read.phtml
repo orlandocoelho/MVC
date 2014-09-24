@@ -1,0 +1,65 @@
+<div class="fluid">
+    <?php
+    require_once 'header.phtml';
+
+use OC\Error\Messages;
+
+$msg = new Messages();
+    $msg->display();
+    ?>
+    <div class="tab-pane">
+
+            <table class="table table-striped table-hover" cellspacing="1">
+                <thead>
+                    <tr>
+                        <td><strong>Nome Item</strong></td>
+                        <td width="15%" class="text-center"><strong>Link</strong></td>
+                        <td width="20%" class="text-center"><strong>Descrição</strong></td>
+                        <td width="15%" class="text-center"><strong>Filiação</strong></td>
+                        <td width="5%" class="text-center"><strong>Publicado</strong></td>
+                        <td width="5%" class="text-center"><strong>Pai</strong></td>
+                        <td width="5%" class="text-center"><strong>Ações</strong></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    
+                    foreach ($this->view->readMenu as $menu):
+                        if ($this->view->id == $menu['adm_cat']):
+                            ?>
+                            <tr>
+                                <td><?= $menu['adm_item'] ?></td>
+                                <td class="text-center"><?= $menu['adm_link'] ?></td>
+                                <td class="text-center"><?= $menu['adm_desc'] ?></td>
+                                <td class="text-center"><?= $menu['adm_family'] ?></td>
+                                <td class="text-center">
+                                <?php
+                                    if($menu['adm_public'] == 0){
+                                        echo  "<a href='/admin/menu/{$this->view->id}/publicMenu/".$menu['id']."'><button type='button' class='btn btn-default btn-xs'><i class='glyphicon glyphicon-star-empty'></i></button></a>";
+                                    }
+                                    else{
+                                        echo "<a href='/admin/menu/{$this->view->id}/despublicMenu/".$menu['id']."'><button type='button' class='btn btn-danger btn-xs'><i class='glyphicon glyphicon-star-empty'></i></button></a>"; 
+                                    }
+                                ?>
+                                </td>
+                                <td class="text-center"><?php if($menu['adm_pai'] === "no") echo "<div class='glyphicon glyphicon-remove red'></div>"; elseif($menu['adm_pai'] === "yes") echo "<div class='glyphicon glyphicon-ok green'></div>"; ?></td>
+                                <td class="text-center">
+                                    <a href="/admin/menu/update/<?= $menu['id'] ?>">
+                                        <i class="glyphicon glyphicon-cog"></i>
+                                    </a>
+                                    <a href="/admin/menu/<?=$this->view->id?>/delete/<?= $menu['id'] ?>">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php
+                        endif;
+                    endforeach;
+                    ?>
+
+                </tbody>
+            </table>
+
+        </div>
+
+</div>

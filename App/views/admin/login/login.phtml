@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Sistema de administração de conteudo">
+        <meta name="author" content="Orlando Luca Coelho - http://www.orlandocoelho.com">
+        <title>Sistema Administrativo de Conteudo</title>
+
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/style.css" />
+
+        <script src="js/jquery-1.10.2.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+
+            <?php
+                use OC\Error\Messages;
+                $msg = new Messages();
+                $msg->display();
+            ?>
+
+            <div class="col-lg-4 col-lg-offset-4 loginForm">
+                <h5>ÁREA RESTRITA</h5>
+                <form action="login" class="form" method="post" name="form_login">
+                    <div class="form-group">
+                        <input type="text" name="login" class="form-control input-lg" placeholder="Login">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="pass" class="form-control input-lg" placeholder="Senha">
+                    </div>
+                    <div class="clearfix"></div>
+                    <input type="hidden" name="acao" value="logar" />
+                    <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-user"></span> Logar</button>
+                </form>
+
+
+            </div>
+            <div class="clearfix"></div>
+            <h6>© <?php echo date("Y"); ?> Sistema Administrativo de Conteúdo!</h6>
+        </div>
+</html>

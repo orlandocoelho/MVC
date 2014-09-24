@@ -1,0 +1,58 @@
+<div class="container">
+    <?php require 'header.phtml'; ?>
+    <?php
+
+    use OC\Error\Messages;
+
+$msg = new Messages();
+    $msg->display();
+    ?>
+    <div class="tab-pane">
+         <div class="row">
+             
+            <div class="col-lg-8 col-lg-offset-2">
+                <?php
+                $url = OC\Di\Container::getClass('url');
+                $user = OC\Di\Container::getClass('user');
+                
+                $where = ['id' => $url->getId()];
+
+                $up = $user->find($where);
+                
+                ?>  
+                
+                <form action="/admin/user/edit" method="post" class="form" id="form">
+                    <div class="form-group">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="name" name="name" class="form-control required" value="<?=$up['adm_name']?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="mail" name="mail" class="form-control" value="<?=$up['adm_mail']?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="login">Login</label>
+                        <input type="text" id="login" name="login" class="form-control" value="<?=$up['adm_login']?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="password" data-toggle="tooltip" title="Caso não queira alterar a senha deixe a em branco!" name="password" class="form-control" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="repSenha">Repita a Senha</label>
+                        <input type="password" id="reppassword" name="reppassword" class="form-control" value="">
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="action" value="edit" />
+                        <input type="hidden" name="passDb" value="<?=$up['adm_pass']?>" />
+                        <input type="hidden" name="id" value="<?=$up['id']?>" />
+                        <input type="hidden" name="dateCad" value="<?=$up['adm_dateCad']?>" />
+                        <button type="submit" class="btn btn-danger">Salvar</button>
+                    </div>
+                </form>  
+            </div><!-- COL-LS-8 COL-lg-OFFSET-2 -->
+            
+        </div><!-- ROW -->
+    </div>
+</div>
+

@@ -1,0 +1,130 @@
+<div class="fluid">
+    <?php
+    require_once 'header.phtml';
+
+use OC\Error\Messages;
+
+$msg = new Messages();
+    $msg->display();
+
+    $url = OC\Di\Container::getClass('url');
+    $menu = OC\Di\Container::getClass('menu');
+    ?>
+
+    <div class="tab-pane">
+        <div class="row">
+            <?php
+            if ($url->getUrl() === "/admin/menu/update/" . $url->getId()) {
+                $value = 'up';
+            } else {
+                $value = 'add';
+            }
+            $up = $this->view->menuUp;
+            $read = $this->view->read;
+            ?>
+            <div class="col-lg-4 col-lg-offset-1">
+                <form action="/admin/menu/<?=$value?>" method="post" class="form" id="form">
+                    <div class="form-group">
+                        <label for="item">Nome Item</label>
+                        <input type="text" id="item" name="item" class="form-control required" value="<?= $up['adm_item'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="link">Link da Pagina</label>
+                        <input type="text" id="link" name="link" class="form-control required" value="<?= $up['adm_link'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Descrição</label>
+                        <input type="text" id="desc" name="desc" class="form-control required" value="<?= $up['adm_desc'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="public">Publicar</label>
+                        <br />
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" name="public" value="1" <?php if($up['adm_public'] == 1){ echo "checked";}?>>
+                                Sim
+                            </label>
+                        </div>
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" name="public" value="0" <?php if($up['adm_public'] == 0){ echo "checked";}?>>
+                                Não
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pai">Item Pai</label>
+                        <br />
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" name="pai" value="yes" <?php if($up['adm_pai'] == "yes"){ echo 'checked="checked"';}?>>
+                                Sim
+                            </label>
+                        </div>
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" name="pai" value="no" <?php if($up['adm_pai'] == "no"){ echo "checked";}?>>
+                                Não
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="filiacao">
+                        <label for="filiacao">Filiação</label>
+
+
+                            <select class="form-control" name="filiacao">
+                                 <option value="nenhum">Nenhum</option>
+                                <?php
+                                    foreach($read as $vl):
+                                        if($vl['adm_pai'] == 'yes'):
+                                ?>
+                                    <option value="<?=$vl['adm_item']?>" <?php if($up['adm_family'] == $vl['adm_item']) echo 'selected="selected"'; ?>><?=$vl['adm_item']?></option>
+                                <?php
+                                        endif;
+                                    endforeach;
+                                ?>
+                            </select>
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                        <input type="hidden" name="action" value="<?= $value ?>" />
+                        <?php if($this->view->url == "/admin/menu/form/{$this->view->id}"):?>
+                            <input type="hidden" name="cat" value="<?= $this->view->id ?>" />
+                        <?php else: ?>
+                            <input type="hidden" name="cat" value="<?= $up['adm_cat'] ?>" />
+                        <?php endif; ?>
+                        <?php if($this->view->url != "/admin/menu/form/{$this->view->id}"):?>
+                            <input type="hidden" name="id" value="<?= $up['id'] ?>" />
+                        <?php endif; ?>
+                        <button type="submit" class="btn btn-danger">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+        if($("input[name='pai']:checked").val() === "yes"){
+            $("#filiacao").hide();
+        }else if($("input[name='pai']:checked").val() === "no"){
+            $("#filiacao").show();
+        }
+    
+        $("input[name='pai']").click(function(){
+            if($(this).val() === "yes"){
+                $("#filiacao").hide();
+            }else if($(this).val() === "no"){
+                $("#filiacao").show();
+            } 
+           
+        });
+});
+</script>

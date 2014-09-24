@@ -1,0 +1,43 @@
+<div class="fluid">
+    <?php
+        require_once 'header.phtml';
+        use OC\Error\Messages;
+        $msg = new Messages();
+        $msg->display();
+    ?>
+    <div class="tab-pane">
+
+
+            <table class="table table-striped table-hover" cellspacing="1">
+                <thead>
+                    <tr>
+                        <td><strong>Nome</strong></td>
+                        <td width="20%" class="text-center"><strong>Descrição</strong></td>
+                        <td width="20%" class="text-center"><strong>Publico</strong></td>
+                        <td width="20%" class="text-center"><strong>Menu</strong></td>
+                        <td width="5%" class="text-center"><strong>Ações</strong></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($this->view->readCategory as $category): ?>
+                        <tr>
+                            <td><a href="/admin/conteudo/category/<?= $category['id']?>/article"><?= $category['adm_name']?></a></td>
+                            <td class="text-center"><?= $category['adm_description'] ?></td>
+                            <td class="text-center"><?php if($category['adm_public'] == 1){ echo 'Sim'; }else{ echo 'Não';} ?></td>
+                            <td class="text-center"><?= $category['adm_menu'] ?></td>
+                            <td class="text-center">
+                                <a href="/admin/conteudo/category/update/<?= $category['id'] ?>">
+                                    <i class="glyphicon glyphicon-cog"></i>
+                                </a>
+                                <a href="/admin/conteudo/category/delete/<?= $category['id'] ?>">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+
+        </div>
+
+</div>

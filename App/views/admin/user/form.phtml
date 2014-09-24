@@ -1,0 +1,86 @@
+<div class="fluid">
+    <?php
+    require_once 'header.phtml';
+
+use OC\Error\Messages;
+
+    $msg = new Messages();
+    $msg->display();
+
+    $url = OC\Di\Container::getClass('url');
+    
+    $up = $this->view->up;
+    
+    ?>
+
+    <div class="tab-pane">
+        <div class="row">
+            <div class="col-lg-4 col-lg-offset-1">
+                
+                <?php
+                if ($url->getUrl() === "/admin/user/update/" . $url->getId()) {
+                    $value = 'up';
+                } else {
+                    $value = 'add';
+                }
+                $up = $this->view->up;
+                ?>
+                
+                <form action="/admin/user/<?=$value?>" method="post" class="form" id="form">
+                    <div class="form-group">
+                        <label for="nome">Nome Completo</label>
+                        <input type="text" id="name" name="name" class="form-control required" placeholder="Ex: João Silva" value="<?=$up['adm_name']?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">E-mail</label>
+                        <input type="text" id="mail" name="mail" class="form-control" placeholder="Ex: joao@site.com" value="<?=$up['adm_mail']?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="login">Login</label>
+                        <input type="text" id="login" name="login" class="form-control" placeholder="Ex: joao" value="<?=$up['adm_login']?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="senha">Senha</label>
+                        <input type="password" id="pass" name="pass" <?php if($url->getUrl() === "/admin/user/update/" . $url->getId()): ?> data-toggle="tooltip" title="Caso não queira alterar a senha deixe a em branco!" <?php endif; ?> class="form-control" placeholder="Tente utiliza numeros e caracteres especiais.">
+                    </div>
+                    <div class="form-group">
+                        <label for="repSenha">Repita a Senha</label>
+                        <input type="password" id="reppass" name="reppass" class="form-control" placeholder="Digite a mesma senha digitada acima.">
+                    </div>
+                    <div class="form-group">
+                        
+                         <?php
+                            if ($url->getUrl() === "/admin/user/update/" . $url->getId()):
+                          ?>
+                                <input type="hidden" name="action" value="edit" />
+                                <input type="hidden" name="passDb" value="<?=$up['adm_pass']?>" />
+                                <input type="hidden" name="id" value="<?=$up['id']?>" />
+                                <input type="hidden" name="dateCad" value="<?=$up['adm_dateCad']?>" />
+                        <?php else: ?>
+                                <input type="hidden" name="action" value="usersadd" />
+                                <input type="hidden" name="dateCad" value="<?= date("d/m/Y - H:i:s") ?>" />
+                        <?php endif; ?>
+                        
+                        
+                        
+                        
+                        
+                        <button type="submit" class="btn btn-danger">Cadastrar</button>
+                    </div>
+                </form>
+            </div><!-- COL-LS-8 COL-lg-OFFSET-2 -->    
+        </div>
+    </div>
+</div>
+
+<?php
+$url = new App\Models\Url();
+?>
+<script type="text/javascript" src="<?php $url->getServer(); ?>/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="<?php $url->getServer(); ?>/js/forms.js"></script>
+
+<script type="text/javascript">
+    $('#pass').tooltip({
+            placement: 'bottom'
+        });
+</script>

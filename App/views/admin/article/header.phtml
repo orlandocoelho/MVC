@@ -1,0 +1,59 @@
+<div class="row page-header">
+    <div class="col-lg-6">
+        
+        <?php       
+        if($this->view->url === "/admin/conteudo/category"
+                OR $this->view->url === "/admin/conteudo/category/form"
+                OR $this->view->url === "/admin/conteudo/category/update/{$this->view->id}"): ?>
+        
+            <h3>Categoria</h3>
+        
+        <?php elseif($this->view->url === "/admin/conteudo/category/{$this->view->id}/article"): ?>
+        
+            <h3>Artigos da Categoria - <u><?= $this->view->findCategory['adm_name']?></u></h3>
+        
+        <?php elseif($this->view->url === "/admin/conteudo/article" 
+                OR $this->view->url === "/admin/conteudo/article/form"
+                OR $this->view->url === "/admin/conteudo/article/update/{$this->view->id}"
+                OR $this->view->url == "/admin/conteudo/category/{$this->view->id}/article/form"): ?>
+        
+            <h3>Artigos</h3>
+        
+        <?php endif; ?>
+        
+        <ol class="breadcrumb">
+            <li><a href="/admin/">Início</a></li>
+            <?php if ($this->view->url === "/admin/conteudo/category/{$this->view->id}/article" OR $this->view->url === "/admin/conteudo/category/update/{$this->view->id}"): ?>
+                <li><a href="/admin/conteudo/category">Categoria de Artigo</a></li>
+                <li class="active"><?= $this->view->findCategory['adm_name']?></li>
+            <?php elseif($this->view->url === "/admin/conteudo/category" OR $this->view->url === "/admin/conteudo/category/form"): ?>
+                <li class="active">Categoria de Artigo</li>
+            <?php elseif($this->view->url === "/admin/conteudo/article" OR $this->view->url === "/admin/conteudo/article/form" OR $this->view->url === "/admin/conteudo/article/update/{$this->view->id}" OR $this->view->url == "/admin/conteudo/category/{$this->view->id}/article/form"):?>
+                <li class="active">Artigo</li>
+            <?php endif; ?>
+        </ol>
+    </div>
+    <?php if ($this->view->url === '/admin/conteudo/category'): ?>
+        <div class="col-lg-6 text-right">
+            <a href="/admin/conteudo/category/form" class="btn btn-success">
+                <span class="glyphicon glyphicon-plus"></span>
+                Add Categoria
+            </a>
+        </div>
+    <?php elseif($this->view->url === "/admin/conteudo/category/{$this->view->id}/article" OR $this->view->url === "/admin/conteudo/article"): ?>
+        <div class="col-lg-6 text-right">
+            <a href="<?php 
+                if($this->view->url == '/admin/conteudo/category/'.$this->view->id.'/article'){
+                    echo '/admin/conteudo/category/'.$this->view->id.'/article/form'; 
+                }elseif($this->view->url == '/admin/conteudo/article'){
+                    echo '/admin/conteudo/article/form'; 
+                }
+                ?>" class="btn btn-success">
+                
+                <span class="glyphicon glyphicon-plus"></span>
+                Add Artigo
+            </a>
+        </div>
+    <?php endif; ?>
+</div>
+<!-- FIM ROW PAGE-HEADER  -->

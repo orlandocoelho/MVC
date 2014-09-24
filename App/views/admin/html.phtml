@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Sistema de administração de conteudo">
+        <meta name="author" content="Orlando Luca Coelho - http://www.orlandocoelho.com">
+        <title>Sistema Administrativo de Conteudo</title>
+        <?php 
+            $url = new App\Models\Url();
+        ?>
+        <link rel="stylesheet" href="<?php $url->getServer('/admin/'); ?>css/bootstrap.min.css" />
+        <link rel="stylesheet" href="<?php $url->getServer('/admin/'); ?>css/style.css" />
+
+        <script src="<?php $url->getServer('/admin/'); ?>js/jquery-1.10.2.min.js"></script>
+        <script src="<?php $url->getServer('/admin/'); ?>js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Alternar navegação</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <a class="navbar-brand" href="/admin/">
+                        LOGO DO CLIENTE
+                    </a>
+                </div>
+
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" href="#">
+                                <span class="clearfix">Sistema</span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <li><a href="">Geral</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="/admin/user">
+                                <span class="clearfix">Usuários</span>
+                            </a>
+                        </li>
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" href="#">
+                                <span class="clearfix">Menu</span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <li><a href="/admin/menu/category">Categoria de Menu</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <?php 
+                                    $catmenu = new App\Models\Menu('adm_categoryMenu');
+                                    $read = $catmenu->read();
+                                    foreach ($read as $m):
+                                ?>
+                                <li><a href="/admin/menu/<?=$m['id']?>"><?=$m['adm_name']?></a></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a data-toggle="dropdown" href="#">
+
+                                <span class="clearfix">Conteúdo</span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <li><a href="/admin/conteudo/category">Categoria de Artigos</a></li>
+                                <li><a href="/admin/conteudo/article">Artigos</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li><a href="/admin/conteudo/image">Imagens</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <a class="navbar-brand pull-right" href="">
+                        LOGO DA EMPRESA
+                    </a>
+                </div><!-- /.nav-collapse -->
+            </div><!-- /.fluid-->
+            <div class="risco"></div>
+        </div>
+
+            <?php echo $this->content('admin'); ?>
+        
+        <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+            <div class="risco"></div>
+            <div class="fluid">
+                <div class="btn-toolbar">
+                    <div class="btn-group pull-right"><p>© Sistema Administrativo de conteúdo - 2014</p></div>
+                    <div class="btn-group">
+                        <a href="<?php $url->getServer(); ?>" target="_blank"><i class="glyphicon glyphicon-retweet"></i> Visualizar site</a>
+                    </div>
+                    <div class="btn-group divider"></div>
+                    <div class="btn-group"><a href=""><i class="glyphicon glyphicon-user"></i> <?=$users['adm_name']?></a></div>
+                    <div class="btn-group divider"></div>
+                    <div class="btn-group"><a href="/admin/logout"><i class="glyphicon glyphicon-minus-sign"></i> Sair</a></div>
+                </div>
+            </div>
+        </nav>
+        
+    </body>
+</html>

@@ -1,0 +1,69 @@
+<div class="fluid">
+    <?php
+    require_once 'header.phtml';
+
+use OC\Error\Messages;
+
+$msg = new Messages();
+    $msg->display();
+
+    $url = OC\Di\Container::getClass('url');
+    $menu = OC\Di\Container::getClass('menu');
+    ?>
+
+    <div class="tab-pane">
+        <div class="row">
+            <?php
+            if ($url->getUrl() === "/admin/menu/category/update/" . $url->getId()) {
+                $value = 'up';
+            } else {
+                $value = 'add';
+            }
+
+            $up = $this->view->catup;
+            ?>
+            <div class="col-lg-3 col-lg-offset-1">
+                <form action="/admin/menu/category/<?= $value ?>" method="post" class="form" id="form">
+                    <div class="form-group">
+                        <label for="item">Nome da categoria</label>
+                        <input type="text" id="name" name="name" class="form-control required" value="<?=$up['adm_name'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Descrição</label>
+                        <input type="text" id="desc" name="desc" class="form-control required" value="<?=$up['adm_description'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="posicion">Posição</label>
+                        <input type="text" id="posicion" name="posicion" class="form-control required" value="<?= $up['adm_posicion'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="public">Publicar</label>
+                        <br />
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" name="public" id="optionsRadios1" value="1" <?php if($up['adm_public'] == 1){ echo "checked";}?>>
+                                Sim
+                            </label>
+                        </div>
+                        <div class="radio-inline">
+                            <label>
+                                <input type="radio" name="public" id="optionsRadios1" value="0" <?php if($up['adm_public'] == 0){ echo "checked";}?>>
+                                Não
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" name="action" value="<?= $value ?>" />
+                        <?php if ($url->getUrl() === "/admin/menu/category/update/" . $url->getId()) :?>
+                            <input type="hidden" name="id" value="<?=$up['id'] ?>" />
+                        <?php endif; ?>
+                        <button type="submit" class="btn btn-danger">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>

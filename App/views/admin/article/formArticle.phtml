@@ -1,0 +1,175 @@
+<script type="text/javascript" src="/admin/js/tinymce/tinymce.min.js"></script>
+<script type="text/javascript">
+    tinymce.init({
+        selector: "textarea",
+        theme: 'modern'
+    });
+</script>
+<div class="fluid">
+    <?php
+    require_once 'header.phtml';
+
+use OC\Error\Messages;
+
+$msg = new Messages();
+    $msg->display();
+    $url = OC\Di\Container::getClass('url');
+    $article = new App\Models\Article('adm_article');
+    ?>
+    <div class="tab-pane">
+        <div class="row">
+            <?php
+            if ($url->getUrl() === "/admin/conteudo/article/update/{$url->getId()}") {
+                $value = 'up';
+            } else {
+                $value = 'add';
+            }
+
+            $where = ['id' => $url->getId()];
+
+            $up = $article->find($where);
+            $menus = new App\Models\Article('adm_menu');
+            $read = $menus->read();
+            ?>      
+            <div class="col-lg-4 col-lg-offset-1">
+                <h3><?php if ($url->getUrl() === "/admin/conteudo/article/form" OR $this->view->url == '/admin/conteudo/category/'.$this->view->id.'/article/form') echo 'Artigo';
+            else echo "Alterando Artigo <strong>{$up['adm_name']}</strong>"; ?></h3>
+                <form action="/admin/conteudo/article/<?=$value?>" method="post" class="form" id="form">
+                    <div class="form-group">
+                        <label for="nameArt">Nome Artigo</label>
+                        <input type="text" id="nameCat" name="nameArt" class="form-control required" value="<?= $up['adm_name'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="positionArt">Posição</label>
+                        <input type="text" id="positioCat" name="positionArt" class="form-control required" maxlength="13" value="<?= $up['adm_position'] ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="publicArt">Artigo Publicado?</label>
+                        <select class="form-control required" name="publicArt">
+                            <option value="1" <?php if ($up['adm_public'] == 1 && $up['adm_public'] != NULL) echo 'selected="selected"'; ?>>Sim</option>
+                            <option value="0" <?php if ($up['adm_public'] == 0 && $up['adm_public'] != NULL) echo 'selected="selected"'; ?>>Não</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="catArt">Categoria Vinculada</label>
+                        <select class="form-control required" name="catArt">
+                            <?php foreach ($this->view->readCat as $category): ?>
+                                <option value="<?= $category['id'] ?>"
+                                    <?php 
+                                        $id = $url->getId();
+                                        if ($up['adm_category'] == $category['id']) 
+                                            echo 'selected="selected"';
+                                        elseif(!empty($id) && $id == $category['id'])
+                                            echo 'selected="selected"';
+                                    ?>>
+                                        <?= $category['adm_name'] ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="imagesArt">Imagens</label>
+                        <button class="btn btn-success" data-toggle="modal" data-target=".img-select-modal">
+                            <span class="glyphicon glyphicon-plus"></span>
+                                     <?php if ($url->getUrl() === "/admin/conteudo/article/form") echo 'Add Imagem';
+                                     else echo 'Alterar Imagens'; ?>
+                        </button>
+                        <button class="btn btn-default" id="imgSelect" disabled="disabled">
+                                <?php $img = explode(", ", $up['adm_images']); ?>
+                            <span class='badge'>
+                                <?php
+                                if (empty($up['adm_images'])) {
+                                    echo "0";
+                                }else{
+                                    echo count($img);
+                                }
+                                ?></span>
+                            <?php
+                            if (!empty($up['adm_images'])) {
+                                foreach ($img as $v) {
+                                    echo "<input type='hidden' name='nameImg[]' value='{$v}'/>";
+                                }
+                            }
+                            ?>
+                            Imagens Selecionadas
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <label for="titleArt">Titulo</label>
+                        <input type="text" id="titleCat" name="titleArt" class="form-control required" value="<?= $up['adm_title'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label for="textArt">Texto</label>
+                        <textarea name="textArt" class="form-control required" rows="15"><?= $up['adm_text'] ?> </textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" name="action" value="<?=$value?>" />
+                        <input type="hidden" name="id" value="<?=$up['id']?>" />
+                        <button type="submit" class="btn btn-danger">Salvar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- Modal SELECIONAR IMAGENS -->
+<div class="modal fade img-select-modal" tabindex="-1" role="dialog" aria-labelledby="imgselectmodal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Selecionar imagens para o artigo</h4>
+                <h6>Clique nas imagens que deseja adicionar ao artigo.</h6>
+            </div>
+            <form action="" method="post" name="selectImage">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="btn-group" data-toggle="buttons">
+                            <?php
+                            $thumb = new OC\Image\Easythumb();
+
+                            $read = count($this->view->readImage);
+                            if ($read <= 0):
+                                echo '<strong>Nem uma imagem cadastrada</strong>';
+                            else:
+                                foreach ($this->view->readImage as $img):
+                                    ?> 
+                                    <div class="col-lg-2">                        
+                                        <?php
+                                        $imgArt = explode(", ", $up['adm_images']);
+                                        ?>
+                                        <label class="btn thumbnail thumb-height <?php foreach ($imgArt as $imgArticle) {
+                                            if ($imgArticle == $img['adm_img']) {
+                                                echo "active";
+                                            }
+                                        } ?>">
+                                            <input type="checkbox" <?php foreach ($imgArt as $imgArticle) {
+                                            if ($imgArticle == $img['adm_img']) {
+                                                echo "checked='checked'";
+                                            }
+                                        } ?> name="nameImg[]" value="<?= $img['adm_img'] ?>" class="check" />
+                                            <img src="<?php if ($url->getUrl() === "/admin/conteudo/article/form") echo '';
+                                            else echo '../'; ?>../../thumbnail.php?thumb=<?= $img['adm_img'] ?>" alt="thumb" />
+                                        </label>
+                                    </div>
+                                    <?php
+                                endforeach;
+                            endif;
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/admin/js/ajax.js"></script>
